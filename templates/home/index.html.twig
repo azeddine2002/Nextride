@@ -55,7 +55,13 @@
         <div class="vehicule-grid">
             {% for vehicule in vehicules %}
                 <div class="vehicule-card">
-                    <div class="photo">Photo</div>
+                    <div class="photo">
+                        {% if vehicule.image %}
+                            <img src="{{ asset('uploads/vehicules/' ~ vehicule.image) }}" alt="{{ vehicule.marque }} {{ vehicule.modele }}">
+                        {% else %}
+                            Photo à venir
+                        {% endif %}
+                    </div>
                     <div class="infos">
                         <h3>{{ vehicule.marque }} {{ vehicule.modele }}</h3>
                         <span class="categorie">{{ categorieLabels[vehicule.categorie.value] }}</span>

@@ -6,7 +6,13 @@
     {% set categorieLabels = {'citadine': 'Citadine', 'suv': 'SUV', 'luxe_sportive': 'Luxe / Sportive'} %}
 
     <div class="fiche-vehicule">
-        <div class="photo">Photo du véhicule</div>
+        <div class="photo">
+            {% if vehicule.image %}
+                <img src="{{ asset('uploads/vehicules/' ~ vehicule.image) }}" alt="{{ vehicule.marque }} {{ vehicule.modele }}">
+            {% else %}
+                Photo à venir
+            {% endif %}
+        </div>
 
         <div class="details">
             <h1>{{ vehicule.marque }} {{ vehicule.modele }}</h1>

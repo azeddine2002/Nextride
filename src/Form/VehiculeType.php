@@ -6,8 +6,10 @@ use App\Entity\Vehicule;
 use App\Enum\CategorieVehicule;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class VehiculeType extends AbstractType
 {
@@ -27,7 +29,18 @@ class VehiculeType extends AbstractType
             ->add('prixJour')
             ->add('disponible')
             ->add('description')
-            ->add('image')
+            ->add('imageFile', FileType::class, [
+                'label' => 'Photo du véhicule',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File(
+                        maxSize: '4M',
+                        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+                        mimeTypesMessage: 'Veuillez déposer une image valide (jpg, png ou webp).',
+                    ),
+                ],
+            ])
         ;
     }
 
