@@ -93,4 +93,11 @@ class Reservation
 
         return $this;
     }
+
+    public function estPeriodeValide(): bool
+    {
+        return null !== $this->dateDebut
+            && null !== $this->dateFin
+            && $this->dateFin > $this->dateDebut;
+    }
 }
