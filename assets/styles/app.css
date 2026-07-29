@@ -233,6 +233,13 @@ main {
     justify-content: center;
     color: var(--texte-mute);
     font-size: 0.85rem;
+    overflow: hidden;
+}
+
+.vehicule-card .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .vehicule-card .infos {
@@ -282,6 +289,14 @@ main {
     align-items: center;
     justify-content: center;
     color: var(--texte-mute);
+    overflow: hidden;
+}
+
+.fiche-vehicule .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 .fiche-vehicule .details {

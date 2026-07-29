@@ -7,14 +7,21 @@ use App\Form\VehiculeType;
 use App\Repository\VehiculeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/vehicule')]
 final class VehiculeController extends AbstractController
 {
+    public function __construct(private readonly string $vehiculesUploadDir)
+    {
+    }
+
     #[Route(name: 'app_vehicule_index', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function index(VehiculeRepository $vehiculeRepository): Response
@@ -26,13 +33,15 @@ final class VehiculeController extends AbstractController
 
     #[Route('/new', name: 'app_vehicule_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $vehicule = new Vehicule();
         $form = $this->createForm(VehiculeType::class, $vehicule);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->enregistrerPhoto($form, $vehicule, $slugger);
+
             $entityManager->persist($vehicule);
             $entityManager->flush();
 
@@ -55,12 +64,14 @@ final class VehiculeController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_vehicule_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function edit(Request $request, Vehicule $vehicule, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Vehicule $vehicule, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(VehiculeType::class, $vehicule);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->enregistrerPhoto($form, $vehicule, $slugger);
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_vehicule_index', [], Response::HTTP_SEE_OTHER);
@@ -82,5 +93,22 @@ final class VehiculeController extends AbstractController
         }
 
         return $this->redirectToRoute('app_vehicule_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function enregistrerPhoto(FormInterface $form, Vehicule $vehicule, SluggerInterface $slugger): void
+    {
+        /** @var UploadedFile|null $photo */
+        $photo = $form->get('imageFile')->getData();
+
+        if (null === $photo) {
+            return;
+        }
+
+        $nomBase = $slugger->slug(pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME));
+        $nomFichier = $nomBase.'-'.uniqid().'.'.$photo->guessExtension();
+
+        $photo->move($this->vehiculesUploadDir, $nomFichier);
+
+        $vehicule->setImage($nomFichier);
     }
 }
