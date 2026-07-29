@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes réservations{% endblock %}
+
+{% block body %}
+    <h1>Mes réservations</h1>
+
+    {% for message in app.flashes('success') %}
+        <div style="color: green;">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div style="color: red;">{{ message }}</div>
+    {% endfor %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Véhicule</th>
+                <th>Date début</th>
+                <th>Date fin</th>
+                <th>Statut</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reservation in reservations %}
+            <tr>
+                <td>{{ reservation.vehicule.marque }} {{ reservation.vehicule.modele }}</td>
+                <td>{{ reservation.dateDebut|date('d/m/Y') }}</td>
+                <td>{{ reservation.dateFin|date('d/m/Y') }}</td>
+                <td>{{ reservation.statut.value }}</td>
+                <td>
+                    {% if reservation.statut.value == 'en_cours' %}
+                        <form method="post" action="{{ path('app_reservation_cancel', {'id': reservation.id}) }}" onsubmit="return confirm('Annuler cette réservation ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ reservation.id) }}">
+                            <button type="submit">Annuler</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune réservation</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_vehicule_index') }}">voir les véhicules</a>
+{% endblock %}

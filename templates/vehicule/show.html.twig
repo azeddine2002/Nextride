@@ -42,9 +42,15 @@
         </tbody>
     </table>
 
+    {% if vehicule.disponible %}
+        <a href="{{ path('app_reservation_new', {'id': vehicule.id}) }}">réserver ce véhicule</a>
+    {% endif %}
+
     <a href="{{ path('app_vehicule_index') }}">back to list</a>
 
-    <a href="{{ path('app_vehicule_edit', {'id': vehicule.id}) }}">edit</a>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_vehicule_edit', {'id': vehicule.id}) }}">edit</a>
 
-    {{ include('vehicule/_delete_form.html.twig') }}
+        {{ include('vehicule/_delete_form.html.twig') }}
+    {% endif %}
 {% endblock %}
