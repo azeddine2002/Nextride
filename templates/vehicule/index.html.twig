@@ -3,41 +3,45 @@
 {% block title %}Administration - Véhicules{% endblock %}
 
 {% block body %}
-<div class="page-contenu">
-    <h1>Administration des véhicules</h1>
+<div class="admin-layout">
+    {% include 'admin/_sidebar.html.twig' %}
 
-    <p><a href="{{ path('app_vehicule_new') }}" class="btn btn-primary">+ Ajouter un véhicule</a></p>
+    <div class="admin-content">
+        <h1>Véhicules</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Marque</th>
-                <th>Modèle</th>
-                <th>Catégorie</th>
-                <th>Prix / jour</th>
-                <th>Disponible</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for vehicule in vehicules %}
-            <tr>
-                <td>{{ vehicule.marque }}</td>
-                <td>{{ vehicule.modele }}</td>
-                <td>{{ vehicule.categorie.value }}</td>
-                <td>{{ vehicule.prixJour }}€</td>
-                <td>{{ vehicule.disponible ? 'Oui' : 'Non' }}</td>
-                <td>
-                    <a href="{{ path('app_vehicule_show', {'id': vehicule.id}) }}">voir</a>
-                    <a href="{{ path('app_vehicule_edit', {'id': vehicule.id}) }}">modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">Aucun véhicule enregistré</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <p><a href="{{ path('app_vehicule_new') }}" class="btn btn-primary">+ Ajouter un véhicule</a></p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Marque</th>
+                    <th>Modèle</th>
+                    <th>Catégorie</th>
+                    <th>Prix / jour</th>
+                    <th>Disponible</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for vehicule in vehicules %}
+                <tr>
+                    <td>{{ vehicule.marque }}</td>
+                    <td>{{ vehicule.modele }}</td>
+                    <td>{{ vehicule.categorie.value }}</td>
+                    <td>{{ vehicule.prixJour }}€</td>
+                    <td>{{ vehicule.disponible ? 'Oui' : 'Non' }}</td>
+                    <td>
+                        <a href="{{ path('app_vehicule_show', {'id': vehicule.id}) }}">voir</a>
+                        <a href="{{ path('app_vehicule_edit', {'id': vehicule.id}) }}">modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">Aucun véhicule enregistré</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
