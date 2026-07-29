@@ -19,6 +19,7 @@
                 <th>Date début</th>
                 <th>Date fin</th>
                 <th>Statut</th>
+                <th>Paiement</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -29,8 +30,12 @@
                 <td>{{ reservation.dateDebut|date('d/m/Y') }}</td>
                 <td>{{ reservation.dateFin|date('d/m/Y') }}</td>
                 <td>{{ reservation.statut.value }}</td>
+                <td>{{ reservation.paye ? 'Payé' : 'Non payé' }}</td>
                 <td>
                     {% if reservation.statut.value == 'en_cours' %}
+                        {% if not reservation.paye %}
+                            <a href="{{ path('app_reservation_payer', {'id': reservation.id}) }}">Payer</a>
+                        {% endif %}
                         <form method="post" action="{{ path('app_reservation_cancel', {'id': reservation.id}) }}" onsubmit="return confirm('Annuler cette réservation ?');">
                             <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ reservation.id) }}">
                             <button type="submit">Annuler</button>
@@ -40,7 +45,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">Aucune réservation</td>
+                <td colspan="6">Aucune réservation</td>
             </tr>
         {% endfor %}
         </tbody>
