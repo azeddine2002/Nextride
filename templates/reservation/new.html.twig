@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réserver {{ vehicule.marque }} {{ vehicule.modele }}{% endblock %}
+
+{% block body %}
+    <h1>Réserver : {{ vehicule.marque }} {{ vehicule.modele }}</h1>
+    <p>{{ vehicule.prixJour }} € / jour</p>
+
+    {% for message in app.flashes('error') %}
+        <div style="color: red;">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Confirmer la réservation</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_vehicule_show', {'id': vehicule.id}) }}">retour au véhicule</a>
+{% endblock %}

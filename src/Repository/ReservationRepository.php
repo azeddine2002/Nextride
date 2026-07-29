@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Reservation;
+use App\Entity\Vehicule;
+use App\Enum\StatutReservation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +16,24 @@ class ReservationRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Reservation::class);
+    }
+
+    public function hasOverlappingReservation(Vehicule $vehicule, \DateTimeImmutable $dateDebut, \DateTimeImmutable $dateFin): bool
+    {
+        $count = $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->andWhere('r.vehicule = :vehicule')
+            ->andWhere('r.statut = :statut')
+            ->andWhere('r.dateDebut <= :dateFin')
+            ->andWhere('r.dateFin >= :dateDebut')
+            ->setParameter('vehicule', $vehicule)
+            ->setParameter('statut', StatutReservation::EN_COURS)
+            ->setParameter('dateDebut', $dateDebut)
+            ->setParameter('dateFin', $dateFin)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $count > 0;
     }
 
     //    /**
