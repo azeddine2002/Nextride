@@ -1,56 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Vehicule{% endblock %}
+{% block title %}{{ vehicule.marque }} {{ vehicule.modele }} - NextRide{% endblock %}
 
 {% block body %}
-    <h1>Vehicule</h1>
+    {% set categorieLabels = {'citadine': 'Citadine', 'suv': 'SUV', 'luxe_sportive': 'Luxe / Sportive'} %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ vehicule.id }}</td>
-            </tr>
-            <tr>
-                <th>Marque</th>
-                <td>{{ vehicule.marque }}</td>
-            </tr>
-            <tr>
-                <th>Modele</th>
-                <td>{{ vehicule.modele }}</td>
-            </tr>
-            <tr>
-                <th>Categorie</th>
-                <td>{{ vehicule.categorie.value }}</td>
-            </tr>
-            <tr>
-                <th>PrixJour</th>
-                <td>{{ vehicule.prixJour }}</td>
-            </tr>
-            <tr>
-                <th>Disponible</th>
-                <td>{{ vehicule.disponible ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ vehicule.description }}</td>
-            </tr>
-            <tr>
-                <th>Image</th>
-                <td>{{ vehicule.image }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="fiche-vehicule">
+        <div class="photo">Photo du véhicule</div>
 
-    {% if vehicule.disponible %}
-        <a href="{{ path('app_reservation_new', {'id': vehicule.id}) }}">réserver ce véhicule</a>
-    {% endif %}
+        <div class="details">
+            <h1>{{ vehicule.marque }} {{ vehicule.modele }}</h1>
+            <p class="categorie">{{ categorieLabels[vehicule.categorie.value] }}</p>
+            <p class="prix">{{ vehicule.prixJour }}€ / jour</p>
 
-    <a href="{{ path('app_vehicule_index') }}">back to list</a>
+            {% if vehicule.description %}
+                <p>{{ vehicule.description }}</p>
+            {% endif %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('app_vehicule_edit', {'id': vehicule.id}) }}">edit</a>
+            <p>Disponibilité : {{ vehicule.disponible ? 'disponible' : 'indisponible' }}</p>
 
-        {{ include('vehicule/_delete_form.html.twig') }}
-    {% endif %}
+            {% if vehicule.disponible %}
+                <a href="{{ path('app_reservation_new', {'id': vehicule.id}) }}" class="btn btn-primary">Réserver ce véhicule</a>
+            {% endif %}
+
+            <p><a href="{{ path('app_home') }}">&larr; retour au catalogue</a></p>
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <hr>
+                <a href="{{ path('app_vehicule_edit', {'id': vehicule.id}) }}" class="btn btn-secondary">modifier</a>
+                {{ include('vehicule/_delete_form.html.twig') }}
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

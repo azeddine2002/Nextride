@@ -1,20 +1,74 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}NextRide - Louez le véhicule qui vous ressemble{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    {% set categorieLabels = {'citadine': 'Citadine', 'suv': 'SUV', 'luxe_sportive': 'Luxe / Sportive'} %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <section class="hero">
+        <h1>Louez le véhicule qui vous ressemble.</h1>
+        <p>Citadines, SUV, véhicules de luxe — réservez en ligne en 2 minutes.</p>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/var/www/html/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>/var/www/html/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
+        <form method="get" action="{{ path('app_home') }}#catalogue" class="hero-recherche">
+            <input type="text" name="q" value="{{ recherche }}" placeholder="Rechercher un véhicule...">
+            {% for categorie in categoriesSelectionnees %}
+                <input type="hidden" name="categorie[]" value="{{ categorie }}">
+            {% endfor %}
+            {% if prixMax %}
+                <input type="hidden" name="prixMax" value="{{ prixMax }}">
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </form>
+    </section>
+
+    <div class="page-catalogue" id="catalogue">
+        <aside class="filtres">
+            <h2>Filtres</h2>
+            <form method="get" action="{{ path('app_home') }}#catalogue">
+                <input type="hidden" name="q" value="{{ recherche }}">
+
+                <fieldset>
+                    <legend>Catégorie</legend>
+                    <label>
+                        <input type="checkbox" name="categorie[]" value="citadine" {{ 'citadine' in categoriesSelectionnees ? 'checked' : '' }}>
+                        Citadine
+                    </label>
+                    <label>
+                        <input type="checkbox" name="categorie[]" value="suv" {{ 'suv' in categoriesSelectionnees ? 'checked' : '' }}>
+                        SUV
+                    </label>
+                    <label>
+                        <input type="checkbox" name="categorie[]" value="luxe_sportive" {{ 'luxe_sportive' in categoriesSelectionnees ? 'checked' : '' }}>
+                        Luxe / Sportive
+                    </label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Prix maximum / jour</legend>
+                    <input type="range" name="prixMax" min="0" max="300" step="10" value="{{ prixMax ?? 300 }}">
+                </fieldset>
+
+                <button type="submit" class="btn btn-secondary">Filtrer</button>
+            </form>
+        </aside>
+
+        <div class="vehicule-grid">
+            {% for vehicule in vehicules %}
+                <div class="vehicule-card">
+                    <div class="photo">Photo</div>
+                    <div class="infos">
+                        <h3>{{ vehicule.marque }} {{ vehicule.modele }}</h3>
+                        <span class="categorie">{{ categorieLabels[vehicule.categorie.value] }}</span>
+                        <span class="prix">{{ vehicule.prixJour }}€ / jour</span>
+                        <div class="actions">
+                            <a href="{{ path('app_vehicule_show', {'id': vehicule.id}) }}" class="btn btn-secondary">Détails</a>
+                            <a href="{{ path('app_reservation_new', {'id': vehicule.id}) }}" class="btn btn-primary">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>Aucun véhicule ne correspond à votre recherche.</p>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

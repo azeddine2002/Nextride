@@ -16,6 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class VehiculeController extends AbstractController
 {
     #[Route(name: 'app_vehicule_index', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(VehiculeRepository $vehiculeRepository): Response
     {
         return $this->render('vehicule/index.html.twig', [

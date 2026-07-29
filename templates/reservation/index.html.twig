@@ -3,13 +3,14 @@
 {% block title %}Mes réservations{% endblock %}
 
 {% block body %}
+<div class="page-contenu">
     <h1>Mes réservations</h1>
 
     {% for message in app.flashes('success') %}
-        <div style="color: green;">{{ message }}</div>
+        <div class="alerte alerte-succes">{{ message }}</div>
     {% endfor %}
     {% for message in app.flashes('error') %}
-        <div style="color: red;">{{ message }}</div>
+        <div class="alerte alerte-erreur">{{ message }}</div>
     {% endfor %}
 
     <table class="table">
@@ -34,11 +35,11 @@
                 <td>
                     {% if reservation.statut.value == 'en_cours' %}
                         {% if not reservation.paye %}
-                            <a href="{{ path('app_reservation_payer', {'id': reservation.id}) }}">Payer</a>
+                            <a href="{{ path('app_reservation_payer', {'id': reservation.id}) }}" class="btn btn-primary">Payer</a>
                         {% endif %}
-                        <form method="post" action="{{ path('app_reservation_cancel', {'id': reservation.id}) }}" onsubmit="return confirm('Annuler cette réservation ?');">
+                        <form method="post" action="{{ path('app_reservation_cancel', {'id': reservation.id}) }}" onsubmit="return confirm('Annuler cette réservation ?');" style="display:inline">
                             <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ reservation.id) }}">
-                            <button type="submit">Annuler</button>
+                            <button type="submit" class="btn btn-danger">Annuler</button>
                         </form>
                     {% endif %}
                 </td>
@@ -51,5 +52,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_vehicule_index') }}">voir les véhicules</a>
+    <p><a href="{{ path('app_home') }}">&larr; voir les véhicules</a></p>
+</div>
 {% endblock %}

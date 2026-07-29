@@ -11,15 +11,24 @@ class VehiculeControllerTest extends WebTestCase
     use UtilisateurTestTrait;
     use VehiculeTestTrait;
 
-    public function testListeVehiculesAccessiblePubliquement(): void
+    public function testCatalogueAccueilAccessiblePubliquement(): void
     {
         $client = static::createClient();
         $vehicule = $this->creerVehicule();
 
-        $client->request('GET', '/vehicule');
+        $client->request('GET', '/');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('body', $vehicule->getMarque());
+    }
+
+    public function testListeAdminVehiculesRedirigeVersLoginPourAnonyme(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/vehicule');
+
+        $this->assertResponseRedirects('/login');
     }
 
     public function testCreationVehiculeRedirigeVersLoginPourAnonyme(): void
