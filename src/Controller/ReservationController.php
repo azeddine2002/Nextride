@@ -53,7 +53,7 @@ final class ReservationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($reservation->getDateFin() <= $reservation->getDateDebut()) {
+            if (!$reservation->estPeriodeValide()) {
                 $this->addFlash('error', 'La date de fin doit être postérieure à la date de début.');
 
                 return $this->render('reservation/new.html.twig', [
