@@ -1,0 +1,33 @@
+services:
+  app:
+    build: .
+    container_name: nextride_app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - database
+
+  database:
+    image: mysql:8.0
+    container_name: nextride_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: nextride_db
+      MYSQL_USER: nextride_user
+      MYSQL_PASSWORD: nextride_pass
+      MYSQL_ROOT_PASSWORD: root_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    container_name: nextride_adminer
+    ports:
+      - "8081:8080"
+
+volumes:
+  db_data:
