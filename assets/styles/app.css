@@ -379,6 +379,47 @@ table.table th {
     margin: 0 0.4rem;
 }
 
+/* Espace administration */
+.admin-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+}
+
+.admin-sidebar {
+    background: var(--blanc);
+    border: 1px solid var(--bordure);
+    border-radius: 8px;
+    padding: 1.25rem;
+    width: 200px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.admin-sidebar-title {
+    font-weight: 700;
+    color: var(--bleu-nuit);
+    margin: 0 0 0.25rem;
+}
+
+.admin-sidebar a {
+    text-decoration: none;
+    color: var(--texte);
+}
+
+.admin-sidebar a.actif {
+    color: var(--orange-accent);
+    font-weight: 600;
+}
+
+.admin-content {
+    flex: 1;
+    min-width: 0;
+}
+
 /* Pages de contenu (mentions legales, rgpd) */
 .page-contenu {
     padding: 2rem 1.5rem;
@@ -394,6 +435,16 @@ table.table th {
 
     .filtres {
         width: 100%;
+    }
+
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
     .vehicule-grid {

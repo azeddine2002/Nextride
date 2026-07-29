@@ -1,0 +1,8 @@
+{% set route = app.request.attributes.get('_route') %}
+<nav class="admin-sidebar">
+    <p class="admin-sidebar-title">MENU</p>
+    <a href="{{ path('app_vehicule_index') }}" class="{{ route starts with 'app_vehicule' ? 'actif' : '' }}">Véhicules</a>
+    <a href="{{ path('app_admin_reservation_index') }}" class="{{ route starts with 'app_admin_reservation' ? 'actif' : '' }}">Réservations</a>
+    <a href="{{ path('app_admin_utilisateur_index') }}" class="{{ route starts with 'app_admin_utilisateur' ? 'actif' : '' }}">Utilisateurs</a>
+    <a href="{{ path('app_logout') }}">Déconnexion</a>
+</nav>
