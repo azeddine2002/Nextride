@@ -15,7 +15,7 @@ class SecurityControllerTest extends WebTestCase
         $utilisateur = $this->creerUtilisateur();
 
         $crawler = $client->request('GET', '/login');
-        $form = $crawler->selectButton('Sign in')->form([
+        $form = $crawler->selectButton('Se connecter')->form([
             '_username' => $utilisateur->getEmail(),
             '_password' => 'Test1234!',
         ]);
@@ -30,13 +30,13 @@ class SecurityControllerTest extends WebTestCase
         $utilisateur = $this->creerUtilisateur();
 
         $crawler = $client->request('GET', '/login');
-        $form = $crawler->selectButton('Sign in')->form([
+        $form = $crawler->selectButton('Se connecter')->form([
             '_username' => $utilisateur->getEmail(),
             '_password' => 'MauvaisMotDePasse',
         ]);
         $client->submit($form);
         $client->followRedirect();
 
-        $this->assertSelectorExists('.alert-danger');
+        $this->assertSelectorExists('.alerte-erreur');
     }
 }

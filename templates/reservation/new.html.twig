@@ -3,17 +3,21 @@
 {% block title %}Réserver {{ vehicule.marque }} {{ vehicule.modele }}{% endblock %}
 
 {% block body %}
+<div class="page-contenu">
     <h1>Réserver : {{ vehicule.marque }} {{ vehicule.modele }}</h1>
-    <p>{{ vehicule.prixJour }} € / jour</p>
+    <p class="prix">{{ vehicule.prixJour }} € / jour</p>
 
     {% for message in app.flashes('error') %}
-        <div style="color: red;">{{ message }}</div>
+        <div class="alerte alerte-erreur">{{ message }}</div>
     {% endfor %}
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit">Confirmer la réservation</button>
-    {{ form_end(form) }}
+    <div class="carte-formulaire">
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-primary">Confirmer la réservation</button>
+        {{ form_end(form) }}
+    </div>
 
-    <a href="{{ path('app_vehicule_show', {'id': vehicule.id}) }}">retour au véhicule</a>
+    <p><a href="{{ path('app_vehicule_show', {'id': vehicule.id}) }}">&larr; retour au véhicule</a></p>
+</div>
 {% endblock %}
