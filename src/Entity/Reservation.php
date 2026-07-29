@@ -23,6 +23,9 @@ class Reservation
     #[ORM\Column(length: 50, enumType: StatutReservation::class)]
     private ?StatutReservation $statut = null;
 
+    #[ORM\Column]
+    private bool $paye = false;
+
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     private ?Utilisateur $utilisateur = null;
 
@@ -90,6 +93,18 @@ class Reservation
     public function setVehicule(?Vehicule $vehicule): static
     {
         $this->vehicule = $vehicule;
+
+        return $this;
+    }
+
+    public function isPaye(): bool
+    {
+        return $this->paye;
+    }
+
+    public function setPaye(bool $paye): static
+    {
+        $this->paye = $paye;
 
         return $this;
     }
