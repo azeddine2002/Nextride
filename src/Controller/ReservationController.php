@@ -46,6 +46,14 @@ final class ReservationController extends AbstractController
             return $this->redirectToRoute('app_vehicule_show', ['id' => $vehicule->getId()]);
         }
 
+        $periodesIndisponibles = array_map(
+            static fn (Reservation $r) => [
+                'from' => $r->getDateDebut()->format('Y-m-d'),
+                'to' => $r->getDateFin()->format('Y-m-d'),
+            ],
+            $reservationRepository->findBy(['vehicule' => $vehicule, 'statut' => StatutReservation::EN_COURS])
+        );
+
         $reservation = new Reservation();
         $reservation->setVehicule($vehicule);
 
@@ -59,6 +67,7 @@ final class ReservationController extends AbstractController
                 return $this->render('reservation/new.html.twig', [
                     'vehicule' => $vehicule,
                     'form' => $form,
+                    'periodesIndisponibles' => $periodesIndisponibles,
                 ]);
             }
 
@@ -68,6 +77,7 @@ final class ReservationController extends AbstractController
                 return $this->render('reservation/new.html.twig', [
                     'vehicule' => $vehicule,
                     'form' => $form,
+                    'periodesIndisponibles' => $periodesIndisponibles,
                 ]);
             }
 
@@ -80,7 +90,7 @@ final class ReservationController extends AbstractController
             $entityManager->persist($reservation);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Réservation confirmée.');
+            $this->addFlash('success', 'Réservation confirmée. Réglez-la pour recevoir votre reçu.');
 
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -88,6 +98,25 @@ final class ReservationController extends AbstractController
         return $this->render('reservation/new.html.twig', [
             'vehicule' => $vehicule,
             'form' => $form,
+            'periodesIndisponibles' => $periodesIndisponibles,
+        ]);
+    }
+
+    #[Route('/{id}/recu', name: 'app_reservation_recu', methods: ['GET'])]
+    public function recu(Reservation $reservation): Response
+    {
+        if ($reservation->getUtilisateur() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if (!$reservation->isPaye()) {
+            $this->addFlash('error', 'Le reçu est disponible une fois la réservation payée.');
+
+            return $this->redirectToRoute('app_reservation_index');
+        }
+
+        return $this->render('reservation/recu.html.twig', [
+            'reservation' => $reservation,
         ]);
     }
 

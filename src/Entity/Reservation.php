@@ -115,4 +115,18 @@ class Reservation
             && null !== $this->dateFin
             && $this->dateFin > $this->dateDebut;
     }
+
+    public function getNombreJours(): int
+    {
+        if (null === $this->dateDebut || null === $this->dateFin) {
+            return 0;
+        }
+
+        return max(1, $this->dateDebut->diff($this->dateFin)->days);
+    }
+
+    public function getMontantTotal(): float
+    {
+        return $this->getNombreJours() * ($this->vehicule?->getPrixJour() ?? 0);
+    }
 }

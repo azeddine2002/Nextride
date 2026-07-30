@@ -64,6 +64,32 @@ class ReservationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('body', 'déjà réservé');
     }
 
+    public function testReservationEnglobanteRefuseeAvecDeuxClientsDifferents(): void
+    {
+        $client = static::createClient();
+        $vehicule = $this->creerVehicule();
+
+        $client->loginUser($this->creerUtilisateur());
+        $crawler = $client->request('GET', '/reservation/nouvelle/'.$vehicule->getId());
+        $form = $crawler->selectButton('Confirmer la réservation')->form([
+            'reservation[dateDebut]' => '2026-07-07',
+            'reservation[dateFin]' => '2026-07-10',
+        ]);
+        $client->submit($form);
+        $this->assertResponseRedirects();
+
+        $client->loginUser($this->creerUtilisateur());
+        $crawler = $client->request('GET', '/reservation/nouvelle/'.$vehicule->getId());
+        $form = $crawler->selectButton('Confirmer la réservation')->form([
+            'reservation[dateDebut]' => '2026-07-06',
+            'reservation[dateFin]' => '2026-07-29',
+        ]);
+        $client->submit($form);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('body', 'déjà réservé');
+    }
+
     public function testVehiculeIndisponibleNePeutPasEtreReserve(): void
     {
         $client = static::createClient();

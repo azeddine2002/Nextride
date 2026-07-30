@@ -33,8 +33,8 @@ final class PaiementController extends AbstractController
         }
 
         $vehicule = $reservation->getVehicule();
-        $nombreJours = max(1, $reservation->getDateDebut()->diff($reservation->getDateFin())->days);
-        $montantCentimes = (int) round($vehicule->getPrixJour() * $nombreJours * 100);
+        $nombreJours = $reservation->getNombreJours();
+        $montantCentimes = (int) round($reservation->getMontantTotal() * 100);
 
         Stripe::setApiKey($this->stripeSecretKey);
 
@@ -78,9 +78,11 @@ final class PaiementController extends AbstractController
             $reservation->setPaye(true);
             $entityManager->flush();
             $this->addFlash('success', 'Paiement confirmé, merci !');
-        } else {
-            $this->addFlash('error', 'Le paiement n\'a pas pu être confirmé.');
+
+            return $this->redirectToRoute('app_reservation_recu', ['id' => $reservation->getId()]);
         }
+
+        $this->addFlash('error', 'Le paiement n\'a pas pu être confirmé.');
 
         return $this->redirectToRoute('app_reservation_index');
     }

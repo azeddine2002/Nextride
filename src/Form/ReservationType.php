@@ -15,11 +15,15 @@ class ReservationType extends AbstractType
         $builder
             ->add('dateDebut', DateType::class, [
                 'widget' => 'single_text',
+                'html5' => false,
+                'format' => 'yyyy-MM-dd',
                 'input' => 'datetime_immutable',
                 'label' => 'Date de début',
             ])
             ->add('dateFin', DateType::class, [
                 'widget' => 'single_text',
+                'html5' => false,
+                'format' => 'yyyy-MM-dd',
                 'input' => 'datetime_immutable',
                 'label' => 'Date de fin',
             ])

@@ -33,6 +33,9 @@
                 <td>{{ reservation.statut.value }}</td>
                 <td>{{ reservation.paye ? 'Payé' : 'Non payé' }}</td>
                 <td>
+                    {% if reservation.paye %}
+                        <a href="{{ path('app_reservation_recu', {'id': reservation.id}) }}" class="btn btn-secondary">Reçu</a>
+                    {% endif %}
                     {% if reservation.statut.value == 'en_cours' %}
                         {% if not reservation.paye %}
                             <a href="{{ path('app_reservation_payer', {'id': reservation.id}) }}" class="btn btn-primary">Payer</a>

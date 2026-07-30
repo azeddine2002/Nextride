@@ -11,12 +11,16 @@
         <div class="alerte alerte-erreur">{{ message }}</div>
     {% endfor %}
 
-    <div class="carte-formulaire">
+    <div class="carte-formulaire"
+        data-controller="reservation-calendrier"
+        data-reservation-calendrier-disabled-value="{{ periodesIndisponibles|json_encode }}">
         {{ form_start(form) }}
-            {{ form_widget(form) }}
+            {{ form_row(form.dateDebut, {attr: {'data-reservation-calendrier-target': 'debut'}}) }}
+            {{ form_row(form.dateFin, {attr: {'data-reservation-calendrier-target': 'fin'}}) }}
             <button type="submit" class="btn btn-primary">Confirmer la réservation</button>
         {{ form_end(form) }}
     </div>
+    <p class="hint">Les dates déjà réservées apparaissent en rouge dans le calendrier.</p>
 
     <p><a href="{{ path('app_vehicule_show', {'id': vehicule.id}) }}">&larr; retour au véhicule</a></p>
 </div>

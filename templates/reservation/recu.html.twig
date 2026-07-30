@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reçu - Réservation n° {{ reservation.id }}{% endblock %}
+
+{% block body %}
+{% set categorieLabels = {'citadine': 'Citadine', 'suv': 'SUV', 'luxe_sportive': 'Luxe / Sportive'} %}
+<div class="page-contenu">
+    <div class="recu-actions no-print">
+        <a href="{{ path('app_reservation_index') }}" class="btn btn-secondary">&larr; Mes réservations</a>
+        <button type="button" class="btn btn-primary" onclick="window.print()">Imprimer / Enregistrer en PDF</button>
+    </div>
+
+    <div class="recu-document">
+        <div class="recu-entete">
+            <div class="recu-marque">
+                <img src="{{ asset('favicon.png') }}" alt="NextRide">
+                <span>NextRide</span>
+            </div>
+            <div class="recu-infos">
+                <p>Reçu de réservation n° {{ reservation.id }}</p>
+                <p>Émis le {{ "now"|date('d/m/Y') }}</p>
+            </div>
+        </div>
+
+        <h2>Client</h2>
+        <p>
+            {{ reservation.utilisateur.prenom }} {{ reservation.utilisateur.nom }}<br>
+            {{ reservation.utilisateur.email }}
+        </p>
+
+        <h2>Véhicule</h2>
+        <p>{{ reservation.vehicule.marque }} {{ reservation.vehicule.modele }} ({{ categorieLabels[reservation.vehicule.categorie.value] }})</p>
+
+        <h2>Détail de la location</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Période</th>
+                    <th>Nombre de jours</th>
+                    <th>Prix / jour</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Du {{ reservation.dateDebut|date('d/m/Y') }} au {{ reservation.dateFin|date('d/m/Y') }}</td>
+                    <td>{{ reservation.nombreJours }}</td>
+                    <td>{{ reservation.vehicule.prixJour|number_format(2, ',', ' ') }} €</td>
+                    <td>{{ reservation.montantTotal|number_format(2, ',', ' ') }} €</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Statut</h2>
+        <p>
+            Réservation : <strong>{{ reservation.statut.value }}</strong><br>
+            Paiement : <strong>{{ reservation.paye ? 'Payé' : 'Non payé' }}</strong>
+        </p>
+    </div>
+</div>
+{% endblock %}

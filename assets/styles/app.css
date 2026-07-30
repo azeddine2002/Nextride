@@ -444,6 +444,88 @@ table.table th {
     margin: 0 auto;
 }
 
+/* Reçu de réservation */
+.recu-actions {
+    display: flex;
+    justify-content: space-between;
+    max-width: 700px;
+    margin: 0 auto 1rem;
+}
+
+.recu-document {
+    background: var(--blanc);
+    border: 1px solid var(--bordure);
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.recu-entete {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--bordure);
+}
+
+.recu-marque {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Poppins', 'Inter', Arial, sans-serif;
+    font-weight: 700;
+    color: var(--bleu-nuit);
+}
+
+.recu-marque img {
+    width: 28px;
+    height: 28px;
+}
+
+.recu-infos {
+    text-align: right;
+    color: var(--texte-mute);
+    font-size: 0.9rem;
+}
+
+.recu-document h2 {
+    font-size: 1rem;
+    color: var(--bleu-nuit);
+    margin: 1.25rem 0 0.4rem;
+}
+
+@media print {
+    .site-header, .site-footer, .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: var(--blanc);
+    }
+
+    .recu-document {
+        border: none;
+        padding: 0;
+    }
+}
+
+/* Calendrier de réservation */
+.hint {
+    color: var(--texte-mute);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+    color: var(--erreur) !important;
+    background-color: var(--erreur-fond) !important;
+    text-decoration: line-through;
+    opacity: 1;
+}
+
 /* Responsive (mobile first) */
 @media (max-width: 900px) {
     .page-catalogue {
