@@ -269,6 +269,8 @@ main {
 .vehicule-card .actions {
     margin-top: auto;
     display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
     justify-content: space-between;
     align-items: center;
 }
