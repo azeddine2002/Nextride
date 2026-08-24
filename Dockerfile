@@ -17,6 +17,10 @@ COPY . .
 # On installe les dépendances PHP du projet (celles listées dans composer.json)
 RUN composer install --no-interaction --optimize-autoloader
 
+# var/ (cache, logs) doit rester ecrivable par Apache (www-data), notamment quand ce dossier
+# est monte comme volume Docker dedie plutot que via le bind mount du code source
+RUN chown -R www-data:www-data var/
+
 # Symfony sert son site depuis le dossier /public, donc on dit à Apache de pointer là-dessus
 RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf

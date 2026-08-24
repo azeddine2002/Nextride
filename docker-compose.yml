@@ -6,6 +6,11 @@ services:
       - "8080:80"
     volumes:
       - .:/var/www/html
+      # vendor/ et var/ restent dans des volumes Docker natifs (pas sur le disque Windows) :
+      # sur Windows, lire des milliers de fichiers via le montage Windows->WSL2->conteneur
+      # est tres lent (page qui met 20s+ a charger). Ici, Docker les isole du bind mount.
+      - app_vendor:/var/www/html/vendor
+      - app_var:/var/www/html/var
     depends_on:
       - database
 
@@ -32,3 +37,5 @@ services:
 
 volumes:
   db_data:
+  app_vendor:
+  app_var:
