@@ -23,7 +23,11 @@ jobs:
           --health-retries=10
 
     env:
-      DATABASE_URL: "mysql://root:root@127.0.0.1:3306/nextride_test?serverVersion=8.0.32&charset=utf8mb4"
+      # La base "nextride_test" est deja creee par le service MySQL ci-dessus (MYSQL_DATABASE).
+      # Doctrine ajoute automatiquement le suffixe "_test" en environnement de test
+      # (voir dbname_suffix dans config/packages/doctrine.yaml) : on part donc de la base
+      # "nextride" pour obtenir "nextride_test" au final, et non "nextride_test_test".
+      DATABASE_URL: "mysql://root:root@127.0.0.1:3306/nextride?serverVersion=8.0.32&charset=utf8mb4"
 
     steps:
       - name: Recuperer le code
